@@ -1,7 +1,7 @@
 from tkinter import *
 
 def prueba():
-    print("No recuerdo")
+    print("In progress")
 def ventmenu():
 
     root = Tk()

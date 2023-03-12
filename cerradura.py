@@ -2,35 +2,35 @@ import os, sys, getpass
 from tkinter import *
 
 
-def ventmenu():
+def ventmenu(registro):
 
-    root = Tk()
-    root.geometry("450x300")
-    root.title("prueba")
+    mcerraduras = Tk()
+    mcerraduras.geometry("450x300")
+    mcerraduras.title("prueba")
 
 
-    root.columnconfigure(0, weight=2)
-    root.rowconfigure(0, weight=1)
+    mcerraduras.columnconfigure(0, weight=2)
+    mcerraduras.rowconfigure(0, weight=1)
 
-    root.columnconfigure(4, weight=2)
-    root.rowconfigure(5, weight=1)
+    mcerraduras.columnconfigure(4, weight=2)
+    mcerraduras.rowconfigure(5, weight=1)
 
-    lbtitle = Label(root, text="MENÚ PRINCIPAL")
+    lbtitle = Label(mcerraduras, text="MENÚ PRINCIPAL")
     lbtitle.grid(column=2, row=0, padx=4, pady=5)
 
-    btnusr = Button(root, text ="ABRIR/CERRAR", command = prueba, height=1, width=12)
+    btnusr = Button(mcerraduras, text ="ABRIR/CERRAR", command=lambda:accionar(registro), height=1, width=12)
     btnusr.grid(column=1, row=1, padx=4, pady=5)
 
-    btnhab = Button(root, text ="REGISTRAR", command = prueba, height=1, width=12)
+    btnhab = Button(mcerraduras, text ="REGISTRAR", command=lambda:registrar(registro), height=1, width=12)
     btnhab.grid(column=1, row=2, padx=4, pady=5)
 
-    btndisp = Button(root, text ="CAMBIAR PIN", command = prueba, height=1, width=12)
+    btndisp = Button(mcerraduras, text ="CAMBIAR PIN", command=lambda:cambiarPin(registro), height=1, width=12)
     btndisp.grid(column=3, row=1, padx=4, pady=5)
 
-    btncrd = Button(root, text ="SALIR", command = prueba, height=1, width=12)
+    btncrd = Button(mcerraduras, text ="SALIR", command=lambda:exit(), height=1, width=12)
     btncrd.grid(column=3, row=2, padx=4, pady=5)
 
-    root.mainloop()
+    mcerraduras.mainloop()
 
 def menu(registro):
     ventmenu()
@@ -74,7 +74,7 @@ def leer():
                 if i in numLinea: #se lee de linea por medio empezando en 1
                     registro.append(linea.strip())
                     numLinea.append(i+2)
-            menu(registro)
+            ventmenu(registro)
 
 
 def accionar(registro):
