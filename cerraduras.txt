@@ -1,0 +1,6 @@
+Nombre:
+principal
+Estado:
+0
+PIN:
+2323
