@@ -5,7 +5,7 @@ def actions(root, file):
     root.destroy()
     match file:
         case 1: prueba()
-        case 2: cerradura(root)
+        case 2: cerradura()
 
 def main():
     root = Tk()
@@ -23,7 +23,6 @@ def main():
     lbtitle = Label(root, text="MENÚ PRINCIPAL")
     lbtitle.grid(column=2, row=0, padx=4, pady=5)
 
-    action = IntVar()
     btnusr = Button(root, text ="USUARIOS", command=lambda: actions(root, 1), height=1, width=12)
     btnusr.grid(column=1, row=1, padx=4, pady=5)
 

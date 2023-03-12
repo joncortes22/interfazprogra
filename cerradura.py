@@ -2,33 +2,40 @@ import os, sys, getpass
 from tkinter import *
 
 
-def ventmenu(registro):
+def ventmenu(tipo, registro):
 
     mcerraduras = Tk()
     mcerraduras.geometry("450x300")
-    mcerraduras.title("prueba")
-
+    mcerraduras.title("MENÚ CERRADURAS")
 
     mcerraduras.columnconfigure(0, weight=2)
     mcerraduras.rowconfigure(0, weight=1)
-
+    mcerraduras.resizable(0,0)
+    
     mcerraduras.columnconfigure(4, weight=2)
     mcerraduras.rowconfigure(5, weight=1)
 
     lbtitle = Label(mcerraduras, text="MENÚ PRINCIPAL")
     lbtitle.grid(column=2, row=0, padx=4, pady=5)
 
-    btnusr = Button(mcerraduras, text ="ABRIR/CERRAR", command=lambda:accionar(registro), height=1, width=12)
-    btnusr.grid(column=1, row=1, padx=4, pady=5)
+    if tipo == 1:
+        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:registrar(registro), height=1, width=12)
+        btnregis.grid(column=1, row=2, padx=4, pady=5)
 
-    btnhab = Button(mcerraduras, text ="REGISTRAR", command=lambda:registrar(registro), height=1, width=12)
-    btnhab.grid(column=1, row=2, padx=4, pady=5)
+        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda:exit(), height=1, width=12)
+        btnsalir.grid(column=3, row=2, padx=4, pady=5)
+    else:
+        btnacc = Button(mcerraduras, text ="ABRIR/CERRAR", command=lambda:accionar(registro), height=1, width=12)
+        btnacc.grid(column=1, row=1, padx=4, pady=5)
 
-    btndisp = Button(mcerraduras, text ="CAMBIAR PIN", command=lambda:cambiarPin(registro), height=1, width=12)
-    btndisp.grid(column=3, row=1, padx=4, pady=5)
+        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:registrar(registro), height=1, width=12)
+        btnregis.grid(column=1, row=2, padx=4, pady=5)
 
-    btncrd = Button(mcerraduras, text ="SALIR", command=lambda:exit(), height=1, width=12)
-    btncrd.grid(column=3, row=2, padx=4, pady=5)
+        btnpin = Button(mcerraduras, text ="CAMBIAR PIN", command=lambda:cambiarPin(registro), height=1, width=12)
+        btnpin.grid(column=3, row=1, padx=4, pady=5)
+
+        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda:exit(), height=1, width=12)
+        btnsalir.grid(column=3, row=2, padx=4, pady=5)
 
     mcerraduras.mainloop()
 
@@ -66,7 +73,7 @@ def leer():
     registro = [] #se define la lista "registro", que manejará toda la información que necesitemos
     if (os.path.exists("cerraduras.txt") == False): #en caso de que el documento no esté creado, la función open con el comando w, crea el documento
         fp = open("cerraduras.txt", "w")
-        menu(registro)
+        menu(1, registro)
     else:
         with open("cerraduras.txt", "r") as fp: #a raíz de que el documento guarda los identificadores "nombre" y "PIN", hay que guardar los valores de por medio
             numLinea = [1] #este array empezará a guardar valores en 2, lo que obtendrá los valores de las cerraduras (recordando que las lineas de txt también se leen desde 0)
@@ -74,7 +81,8 @@ def leer():
                 if i in numLinea: #se lee de linea por medio empezando en 1
                     registro.append(linea.strip())
                     numLinea.append(i+2)
-            ventmenu(registro)
+            if len(registro)==0: ventmenu(1, registro)
+            else: ventmenu(2, registro)
 
 
 def accionar(registro):
