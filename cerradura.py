@@ -84,6 +84,34 @@ def leer():
             if len(registro)==0: ventmenu(1, registro)
             else: ventmenu(2, registro)
 
+def ventaccionar():
+    maccionar = Tk()
+    maccionar.geometry("450x300")
+    maccionar.title("ABRIR / CERRAR")
+
+    maccionar.columnconfigure(0, weight=2)
+    maccionar.rowconfigure(0, weight=1)
+    maccionar.resizable(0,0)
+    
+    maccionar.columnconfigure(4, weight=2)
+    maccionar.rowconfigure(5, weight=1)
+
+    lbtitle = Label(maccionar, text="MENÚ PRINCIPAL")
+    lbtitle.grid(column=2, row=0, padx=4, pady=5)
+    
+    btnacc = Button(maccionar, text ="ABRIR/CERRAR", height=1, width=12)
+    btnacc.grid(column=1, row=1, padx=4, pady=5)
+
+    btnregis = Button(maccionar, text ="REGISTRAR", height=1, width=12)
+    btnregis.grid(column=1, row=2, padx=4, pady=5)
+
+    btnpin = Button(maccionar, text ="CAMBIAR PIN", height=1, width=12)
+    btnpin.grid(column=3, row=1, padx=4, pady=5)
+
+    btnsalir = Button(maccionar, text ="SALIR", height=1, width=12)
+    btnsalir.grid(column=3, row=2, padx=4, pady=5)
+
+    maccionar.mainloop()
 
 def accionar(registro):
     os.system('clear' if os.name == 'posix' else 'cls')
@@ -185,7 +213,37 @@ def accionar(registro):
             accionar(registro)
 
 
+def vregistro():
+    mregistro = Tk()
+    mregistro.geometry("450x300")
+    mregistro.title("REGISTRAR")
+
+    mregistro.columnconfigure(0, weight=2)
+    mregistro.rowconfigure(0, weight=1)
+    mregistro.resizable(0,0)
+    
+    mregistro.columnconfigure(4, weight=2)
+    mregistro.rowconfigure(5, weight=1)
+
+    lbtitle = Label(mregistro, text="MENÚ PRINCIPAL")
+    lbtitle.grid(column=2, row=0, padx=4, pady=5)
+    
+    btnacc = Button(mregistro, text ="ABRIR/CERRAR", height=1, width=12)
+    btnacc.grid(column=1, row=1, padx=4, pady=5)
+
+    btnregis = Button(mregistro, text ="REGISTRAR", height=1, width=12)
+    btnregis.grid(column=1, row=2, padx=4, pady=5)
+
+    btnpin = Button(mregistro, text ="CAMBIAR PIN", height=1, width=12)
+    btnpin.grid(column=3, row=1, padx=4, pady=5)
+
+    btnsalir = Button(mregistro, text ="SALIR", height=1, width=12)
+    btnsalir.grid(column=3, row=2, padx=4, pady=5)
+
+    mregistro.mainloop()
+
 def registrar(registro):
+    vregistro()
     os.system('clear' if os.name == 'posix' else 'cls')
     while True:
         os.system('clear' if os.name == 'posix' else 'cls')
