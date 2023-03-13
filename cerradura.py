@@ -1,6 +1,10 @@
 import os, sys, getpass
 from tkinter import *
 
+def main():
+    pass
+if __name__ == "__prueba__":
+    main()
 
 def ventmenu(tipo, registro):
 
@@ -22,19 +26,19 @@ def ventmenu(tipo, registro):
         btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:registrar(registro), height=1, width=12)
         btnregis.grid(column=1, row=2, padx=4, pady=5)
 
-        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda:exit(), height=1, width=12)
+        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda: main(), height=1, width=12)
         btnsalir.grid(column=3, row=2, padx=4, pady=5)
     else:
         btnacc = Button(mcerraduras, text ="ABRIR/CERRAR", command=lambda:accionar(registro), height=1, width=12)
         btnacc.grid(column=1, row=1, padx=4, pady=5)
 
-        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:registrar(registro), height=1, width=12)
+        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:registrar(mcerraduras, registro), height=1, width=12)
         btnregis.grid(column=1, row=2, padx=4, pady=5)
 
         btnpin = Button(mcerraduras, text ="CAMBIAR PIN", command=lambda:cambiarPin(registro), height=1, width=12)
         btnpin.grid(column=3, row=1, padx=4, pady=5)
 
-        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda:exit(), height=1, width=12)
+        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda:prueba(), height=1, width=12)
         btnsalir.grid(column=3, row=2, padx=4, pady=5)
 
     mcerraduras.mainloop()
@@ -218,31 +222,54 @@ def vregistro():
     mregistro.geometry("450x300")
     mregistro.title("REGISTRAR")
 
-    mregistro.columnconfigure(0, weight=2)
-    mregistro.rowconfigure(0, weight=1)
+    """mregistro.columnconfigure(0, weight=2)
+    mregistro.rowconfigure(0, weight=1)"""
     mregistro.resizable(0,0)
     
     mregistro.columnconfigure(4, weight=2)
     mregistro.rowconfigure(5, weight=1)
 
-    lbtitle = Label(mregistro, text="MENÚ PRINCIPAL")
-    lbtitle.grid(column=2, row=0, padx=4, pady=5)
+    lbtitle = Label(mregistro, text="REGISTRAR CERRADURAS")
+    lbtitle.grid(column=2, row=0, padx=4, pady=5, sticky='w')
     
-    btnacc = Button(mregistro, text ="ABRIR/CERRAR", height=1, width=12)
-    btnacc.grid(column=1, row=1, padx=4, pady=5)
+    
+    lbname = Label(mregistro, text="Nombre")
+    lbname.grid(column=1, row=1, padx=4, pady=5, sticky='w')
+    
+    txtname = Entry(mregistro)
+    txtname.grid(column=2, row=1, padx=4, pady=5, sticky='w')
 
-    btnregis = Button(mregistro, text ="REGISTRAR", height=1, width=12)
-    btnregis.grid(column=1, row=2, padx=4, pady=5)
 
-    btnpin = Button(mregistro, text ="CAMBIAR PIN", height=1, width=12)
-    btnpin.grid(column=3, row=1, padx=4, pady=5)
+    lblestado = Label(mregistro, text="Estado")
+    lblestado.grid(column=1, row=2, pady=5, padx=4, sticky='w')
+    estado = StringVar() 
+    cb_strings = ['Abierto', 'Cerrado']
+    estado.set(cb_strings[0])
 
-    btnsalir = Button(mregistro, text ="SALIR", height=1, width=12)
-    btnsalir.grid(column=3, row=2, padx=4, pady=5)
+    columnf = 2
+    for item in cb_strings:
+        button = Radiobutton(mregistro, text=item, variable=estado, value=item)
+        button.grid(column=columnf, row=2, sticky='w')
+        columnf += 1
+
+
+    lbpin = Label(mregistro, text="PIN")
+    lbpin.grid(column=1, row=3, padx=4, pady=5, sticky='w')
+    
+    lbpin = Entry(mregistro, show="*")
+    lbpin.grid(column=2, row=3, padx=4, pady=5, sticky='w')
+
+    btnacc = Button(mregistro, text ="VERIFICAR", height=1, width=12)
+    btnacc.grid(column=1, row=4, padx=4, pady=5)
+
+    btnext = Button(mregistro, text ="SALIR", height=1, width=12, command=lambda: main())
+    btnext.grid(column=2, row=4, padx=4, pady=5)
+
 
     mregistro.mainloop()
 
-def registrar(registro):
+def registrar(root,registro):
+    root.destroy()
     vregistro()
     os.system('clear' if os.name == 'posix' else 'cls')
     while True:

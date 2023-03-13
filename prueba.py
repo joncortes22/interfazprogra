@@ -1,4 +1,5 @@
 from tkinter import *
+
 from file import prueba
 from cerradura import leer as cerradura
 def actions(root, file):
