@@ -2,7 +2,8 @@ import os, sys, getpass
 from tkinter import *
 from tkinter import messagebox
 
-def ventmenu(tipo, registro):
+registro = []
+def ventmenu(tipo):
 
     mcerraduras = Tk()
     mcerraduras.geometry("450x300")
@@ -19,22 +20,22 @@ def ventmenu(tipo, registro):
     lbtitle.grid(column=2, row=0, padx=4, pady=5)
 
     if tipo == 1:
-        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:vregistro(mcerraduras, registro), height=1, width=12)
+        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:vregistro(mcerraduras), height=1, width=12)
         btnregis.grid(column=1, row=2, padx=4, pady=5)
 
         btnsalir = Button(mcerraduras, text ="SALIR", command=lambda: exit(), height=1, width=12)
         btnsalir.grid(column=3, row=2, padx=4, pady=5)
     else:
-        btnacc = Button(mcerraduras, text ="ABRIR/CERRAR", command=lambda:accionar(registro), height=1, width=12)
+        btnacc = Button(mcerraduras, text ="ABRIR/CERRAR", command=lambda:accionar(), height=1, width=12)
         btnacc.grid(column=1, row=1, padx=4, pady=5)
 
-        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:vregistro(mcerraduras, registro), height=1, width=12)
+        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:vregistro(mcerraduras), height=1, width=12)
         btnregis.grid(column=1, row=2, padx=4, pady=5)
 
-        btnpin = Button(mcerraduras, text ="CAMBIAR PIN", command=lambda:cambiarPin(registro), height=1, width=12)
+        btnpin = Button(mcerraduras, text ="CAMBIAR PIN", command=lambda:cambiarPin(), height=1, width=12)
         btnpin.grid(column=3, row=1, padx=4, pady=5)
 
-        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda:cambiarPin(registro), height=1, width=12)
+        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda:cambiarPin(), height=1, width=12)
         btnsalir.grid(column=3, row=2, padx=4, pady=5)
 
     mcerraduras.mainloop()
@@ -42,10 +43,9 @@ def ventmenu(tipo, registro):
 
 def leer():
     #Esta función lee los contenidos del documento "cerraduras.txt", que es donde se almacena la información
-    registro = [] #se define la lista "registro", que manejará toda la información que necesitemos
     if (os.path.exists("cerraduras.txt") == False): #en caso de que el documento no esté creado, la función open con el comando w, crea el documento
         fp = open("cerraduras.txt", "w")
-        ventmenu(1, registro)
+        ventmenu(1)
     else:
         with open("cerraduras.txt", "r") as fp: #a raíz de que el documento guarda los identificadores "nombre" y "PIN", hay que guardar los valores de por medio
             numLinea = [1] #este array empezará a guardar valores en 2, lo que obtendrá los valores de las cerraduras (recordando que las lineas de txt también se leen desde 0)
@@ -53,8 +53,8 @@ def leer():
                 if i in numLinea: #se lee de linea por medio empezando en 1
                     registro.append(linea.strip())
                     numLinea.append(i+2)
-            if len(registro)==0: ventmenu(1, registro)
-            else: ventmenu(2, registro)
+            if len(registro)==0: ventmenu(1)
+            else: ventmenu(2)
 
 def ventaccionar():
     maccionar = Tk()
@@ -85,7 +85,7 @@ def ventaccionar():
 
     maccionar.mainloop()
 
-def accionar(registro):
+def accionar():
     os.system('clear' if os.name == 'posix' else 'cls')
     while True:
         try:
@@ -114,8 +114,8 @@ def accionar(registro):
             #ELECCIÓN DE CERRADURA
             while True:
                 select = input("Ingrese el # de la cerradura a modificar o 'S' para salir: ")
-                if select.lower().strip() == 's': ventmenu(2, registro)
-                if int(select.strip()) > len(nombres): accionar(registro)
+                if select.lower().strip() == 's': ventmenu(2)
+                if int(select.strip()) > len(nombres): accionar()
                 else:
                     find = False
                     for i in range(len(registro)):
@@ -178,17 +178,17 @@ def accionar(registro):
             while True: #Después de haber guardado la cerradura, se pregunta cuál es la siguiente acción
                 resp = int(input("¿Desea modificar otra cerradura? 1-Si 2-No | Resp: "))
                 if resp == 1: break #Si la respuesta es sí, vuelve a comenzar el proceso de registro
-                elif resp == 2: accionar(registro) #Si es no, se abre el menú
+                elif resp == 2: accionar() #Si es no, se abre el menú
                 else: print("Opción no valida") #Cualquier otra opción dará error
             print("Prueba")
         except ValueError:
-            accionar(registro)
+            accionar()
 
-def verificar(nombre, estado,pin, registro, root):
+def verificar(nombre, estado,pin, root):
     datos = [nombre,estado,pin]
-    registrar(datos, registro, root)
+    registrar(datos, root)
 
-def vregistro(root, registro):
+def vregistro(root):
     root.destroy()
     mregistro = Tk()
     mregistro.geometry("450x300")
@@ -223,7 +223,7 @@ def vregistro(root, registro):
 
     R2 = Radiobutton(mregistro, text="Cerrado", variable=var, value="Cerrado")
     R2.grid(column=3, row=2, sticky='w')
-
+    var.set(None)
 
 
     lbpin = Label(mregistro, text="PIN")
@@ -232,7 +232,7 @@ def vregistro(root, registro):
     txtpin = Entry(mregistro, show="*")
     txtpin.grid(column=2, row=3, padx=4, pady=5, sticky='w')
 
-    btnacc = Button(mregistro, text ="VERIFICAR", command=lambda: verificar(txtname.get(), var.get(), txtpin.get(), registro, mregistro), height=1, width=12)
+    btnacc = Button(mregistro, text ="VERIFICAR", command=lambda: verificar(txtname.get(), var.get(), txtpin.get(), mregistro), height=1, width=12)
     btnacc.grid(column=1, row=4, padx=4, pady=5)
 
     btnext = Button(mregistro, text ="SALIR", height=1, width=12, command=lambda: exit())
@@ -241,7 +241,7 @@ def vregistro(root, registro):
 
     mregistro.mainloop()
 
-def registrar(datos,registro, root):
+def registrar(datos, root):
     
     os.system('clear' if os.name == 'posix' else 'cls')
     while True:
@@ -257,7 +257,7 @@ def registrar(datos,registro, root):
                 if i>len(registro):break
             if repetido:
                 messagebox.showwarning(message="NOMBRE EN USO", title="ERROR")
-                vregistro(root, registro)
+                vregistro(root)
             else: registro.append(datos[0].strip())
         else:
             registro.append(datos[0].strip())
@@ -276,11 +276,11 @@ def registrar(datos,registro, root):
             if not datos[2].isnumeric():
                 messagebox.showwarning(message="PIN DEBE SER NÚMERICO", title="ERROR")
                 for i in range(2): del registro[len(registro)-1]
-                vregistro(root, registro)
+                vregistro(root)
             if len(datos[2].strip())<4 or len(datos[2].strip())> 6:
                 messagebox.showwarning(message="CANTIDAD DE CARACTERES INVÁLIDOS", title="ERROR")
                 for i in range(2): del registro[len(registro)-1]
-                vregistro(root, registro)
+                vregistro(root)
             
 
         titulo = 0 #variable que decidirá qué tipo de dato se escribirá en el .txt
@@ -302,10 +302,10 @@ def registrar(datos,registro, root):
                 f.write("\n")
             messagebox.showinfo(message="INGRESADO CORRECTAMENTE", title="REGISTRO")
         root.destroy()
-        ventmenu(2,registro)
+        ventmenu(2)
 
 
-def cambiarPin(registro):
+def cambiarPin():
     os.system('clear' if os.name == 'posix' else 'cls')
     
     while True:
@@ -327,7 +327,7 @@ def cambiarPin(registro):
         #ELECCIÓN DE CERRADURA
         select = input("Ingrese el # de la cerradura a modificar o 'S' para salir: ")
         if select.lower().strip() == 's': return
-        if int(select.strip()) > len(nombres): cambiarPin(registro)
+        if int(select.strip()) > len(nombres): cambiarPin()
         else:
             for i in range(len(registro)):
                 if (nombres[int(select.strip())-1] == registro[i]):
@@ -345,7 +345,7 @@ def cambiarPin(registro):
                     opt = int(input("¿Desea volver a intentar? 1-Si 2-No: ")) #la respuesta debe de ser 1 o 2
                     if opt != 1 and opt != 2: print("Opción no valida\n")
                     if opt == 1: break 
-                    elif opt == 2: cambiarPin(registro)
+                    elif opt == 2: cambiarPin()
                         
         #INGRESO DE NUEVO PIN
         
