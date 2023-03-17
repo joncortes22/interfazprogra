@@ -20,22 +20,22 @@ def ventmenu(tipo):
     lbtitle.grid(column=2, row=0, padx=4, pady=5)
 
     if tipo == 1:
-        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:vregistro(mcerraduras), height=1, width=12)
+        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:vregistrar(mcerraduras), height=1, width=13)
         btnregis.grid(column=1, row=2, padx=4, pady=5)
 
-        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda: exit(), height=1, width=12)
+        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda: exit(), height=1, width=13)
         btnsalir.grid(column=3, row=2, padx=4, pady=5)
     else:
-        btnacc = Button(mcerraduras, text ="ABRIR/CERRAR", command=lambda:accionar(), height=1, width=12)
+        btnacc = Button(mcerraduras, text ="ABRIR/CERRAR", command=lambda:accionar(), height=1, width=13)
         btnacc.grid(column=1, row=1, padx=4, pady=5)
 
-        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:vregistro(mcerraduras), height=1, width=12)
+        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:vregistrar(mcerraduras), height=1, width=13)
         btnregis.grid(column=1, row=2, padx=4, pady=5)
 
-        btnpin = Button(mcerraduras, text ="CAMBIAR PIN", command=lambda:vpin(mcerraduras), height=1, width=12)
+        btnpin = Button(mcerraduras, text ="MODIFICAR PIN", command=lambda:vpin(mcerraduras), height=1, width=13)
         btnpin.grid(column=3, row=1, padx=4, pady=5)
 
-        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda:exit(), height=1, width=12)
+        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda:exit(), height=1, width=13)
         btnsalir.grid(column=3, row=2, padx=4, pady=5)
 
     mcerraduras.mainloop()
@@ -190,7 +190,7 @@ def verificar(nombre, estado,pin, root):
     datos = [nombre,estado,pin]
     registrar(datos, root)
 
-def vregistro(root):
+def vregistrar(root):
     root.destroy()
     mregistro = Tk()
     mregistro.geometry("450x300")
@@ -254,7 +254,7 @@ def registrar(datos, root):
     
     if datos[0] == '' or datos[1] == 'None' or datos[2] == '':
         messagebox.showerror(message="INFORMACIÓN INCOMPLETA", title="ERROR")
-        vregistro(root)
+        vregistrar(root)
 
     repetido = False
     if len(registro) > 0: #si hay datos registrados, se pueden crear nuevos, si no, que se cree el primero
@@ -265,7 +265,7 @@ def registrar(datos, root):
             if i>len(registro):break
         if repetido:
             messagebox.showerror(message="NOMBRE EN USO", title="ERROR")
-            vregistro(root)
+            vregistrar(root)
         else: registro.append(datos[0].strip())
     else:
         registro.append(datos[0].strip())
@@ -274,7 +274,7 @@ def registrar(datos, root):
     #VALIDACIÓN DE ESTADO
     if datos[1] == 'None':
         messagebox.showerror(message="ESTADO SIN ELEGIR", title="ERROR")
-        vregistro(root)
+        vregistrar(root)
     else:
         if datos[1] == "Abierto": registro.append("1")
         else: registro.append("0")
@@ -286,11 +286,11 @@ def registrar(datos, root):
     if not datos[2].isnumeric():
         messagebox.showerror(message="PIN DEBE SER NUMÉRICO", title="ERROR")
         for i in range(2): del registro[len(registro)-1]
-        vregistro(root)
+        vregistrar(root)
     if len(datos[2].strip())<4 or len(datos[2].strip())> 6:
         messagebox.showerror(message="CANTIDAD DE CARACTERES INVÁLIDOS", title="ERROR")
         for i in range(2): del registro[len(registro)-1]
-        vregistro(root)
+        vregistrar(root)
         
 
     titulo = 0 #variable que decidirá qué tipo de dato se escribirá en el .txt
@@ -311,7 +311,7 @@ def registrar(datos, root):
                 titulo = 0 #Se devuelve la variable a 0 para que la próxima escritura sea de un Nombre de Cerradura
             f.write("\n")
         messagebox.showinfo(message="INGRESADO CORRECTAMENTE", title="REGISTRO")
-    vregistro(root)
+    vregistrar(root)
 
 def vpin(root):
     root.destroy()
@@ -393,7 +393,7 @@ def cambiarPin(root, cerradura, pin, newpin):
                     
     #INGRESO DE NUEVO PIN
     
-    
+
     if newpin == oldpin:
         messagebox.showerror(message="NUEVO PIN ES IGUAL AL ACTUAL", title="ERROR")
         vpin(root)
@@ -404,7 +404,7 @@ def cambiarPin(root, cerradura, pin, newpin):
         for i in range(0, len(registro), 3): #se procede a cambiar el PIN en la lista para posteriormente hacer la modificación del cerraduras.txt
             if (cerradura.strip() == registro[i]):
                 registro[i+2] = newpin.strip() #se intercambia el anterior PIN por el nuevo
-                messagebox.showinfo(message="PIN MODIFICADO EXITOSAMENTE", title="MODIFICADO")
+                messagebox.showinfo(message="PIN MODIFICADO EXITOSAMENTE", title="MODIFICAR PIN")
     else:
         messagebox.showerror(message="PIN DEBE SER DE 4 A 6 CARACTERES", title="ERROR")
         vpin(root)
