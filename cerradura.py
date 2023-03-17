@@ -1,8 +1,9 @@
 import os, sys, getpass
 from tkinter import *
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 
 registro = []
+combostate = ''
 def ventmenu(tipo):
 
     mcerraduras = Tk()
@@ -26,7 +27,7 @@ def ventmenu(tipo):
         btnsalir = Button(mcerraduras, text ="SALIR", command=lambda: exit(), height=1, width=13)
         btnsalir.grid(column=3, row=2, padx=4, pady=5)
     else:
-        btnacc = Button(mcerraduras, text ="ABRIR/CERRAR", command=lambda:accionar(), height=1, width=13)
+        btnacc = Button(mcerraduras, text ="ABRIR/CERRAR", command=lambda:vaccionar(mcerraduras), height=1, width=13)
         btnacc.grid(column=1, row=1, padx=4, pady=5)
 
         btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:vregistrar(mcerraduras), height=1, width=13)
@@ -58,37 +59,78 @@ def leer():
             if len(registro)==0: ventmenu(1)
             else: ventmenu(2)
 
-def ventaccionar():
+
+
+def vaccionar(root):
+    def selection_changed(event):
+        cerradura = event.widget.get()
+        for i in range(0, len(registro), 3):
+            if cerradura == registro[i]: 
+                if registro[i+1] == '1': 
+                    estado.config(text='Abierto')
+                    lbinst.config(text='*ingrese para cerrar')
+                else: 
+                    estado.config(text='Cerrado')
+                    lbinst.config(text='*ingrese para abrir')
+                break
+
+    root.destroy()
     maccionar = Tk()
     maccionar.geometry("450x300")
-    maccionar.title("ABRIR / CERRAR")
+    maccionar.title("ACCIONAR")
 
-    maccionar.columnconfigure(0, weight=2)
+    """maccionar.columnconfigure(0, weight=2)
+    maccionar.rowconfigure(0, weight=1)"""
+    maccionar.resizable(0,0)
+    
+    maccionar.columnconfigure(0, weight=1)
     maccionar.rowconfigure(0, weight=1)
     maccionar.resizable(0,0)
     
     maccionar.columnconfigure(4, weight=2)
-    maccionar.rowconfigure(5, weight=1)
+    maccionar.rowconfigure(6, weight=1)
 
-    lbtitle = Label(maccionar, text="MENÚ PRINCIPAL")
-    lbtitle.grid(column=2, row=0, padx=4, pady=5)
+    lbtitle = Label(maccionar, text="ABRIR/CERRAR", font=('bold'))
+    lbtitle.grid(column=2, row=0, padx=4, pady=5, sticky='w')
     
-    btnacc = Button(maccionar, text ="ABRIR/CERRAR", height=1, width=12)
-    btnacc.grid(column=1, row=1, padx=4, pady=5)
+    
+    lbname = Label(maccionar, text="Cerraduras Disponibles")
+    lbname.grid(column=1, row=1, padx=4, pady=5, sticky='w')
+    
+    options = []
+    for i in range(0,len(registro),3):
+        options.append(registro[i])
+  
+    # datatype of menu text
+    combo = ttk.Combobox(maccionar, values=options, state='readonly')
+    combo.bind("<<ComboboxSelected>>", selection_changed)
+    combo.configure(width=13)
+    combo.grid(column=2,row=1, padx=4, pady=5, sticky='w')
 
-    btnregis = Button(maccionar, text ="REGISTRAR", height=1, width=12)
-    btnregis.grid(column=1, row=2, padx=4, pady=5)
+    lblestado = Label(maccionar, text="Estado")
+    lblestado.grid(column=1, row=3, padx=4, pady=5, sticky='w')
+    
+    estado = Label(maccionar, text=combostate)
+    estado.grid(column=2, row=3, padx=4, pady=5, sticky='w')
+    
+    lbpin2 = Label(maccionar, text="PIN")
+    lbpin2.grid(column=1, row=4, padx=4, pady=5, sticky='w')
+    lbinst = Label(maccionar, text="", font=('Arial',8))
+    lbinst.grid(column=2, row=5, pady=5, sticky='nw')
+    
+    txtnewpin = Entry(maccionar, show="*")
+    txtnewpin.grid(column=2, row=4, padx=4, pady=5, sticky='w')
 
-    btnpin = Button(maccionar, text ="CAMBIAR PIN", height=1, width=12)
-    btnpin.grid(column=3, row=1, padx=4, pady=5)
+    btnacc = Button(maccionar, text ="VERIFICAR", command=lambda: cambiarPin(maccionar, clicked.get(), txtpinact.get(), txtnewpin.get()), height=1, width=12)
+    btnacc.grid(column=1, row=6, padx=4, pady=5)
 
-    btnsalir = Button(maccionar, text ="SALIR", height=1, width=12)
-    btnsalir.grid(column=3, row=2, padx=4, pady=5)
+    btnext = Button(maccionar, text ="SALIR", height=1, width=12, command=lambda: mactivo(maccionar))
+    btnext.grid(column=2, row=6, padx=4, pady=5)
+
 
     maccionar.mainloop()
 
 def accionar():
-    os.system('clear' if os.name == 'posix' else 'cls')
     while True:
         try:
             os.system('clear' if os.name == 'posix' else 'cls')
@@ -373,8 +415,6 @@ def vpin(root):
     mpin.mainloop()
 def cambiarPin(root, cerradura, pin, newpin):
     
-    
-    os.system('clear' if os.name == 'posix' else 'cls')
     if cerradura == '' or pin == '' or newpin == '':
         messagebox.showerror(message="INFORMACIÓN INCOMPLETA", title="ERROR")
         vpin(root)
