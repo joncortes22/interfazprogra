@@ -32,7 +32,7 @@ def ventmenu(tipo):
         btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:vregistro(mcerraduras), height=1, width=12)
         btnregis.grid(column=1, row=2, padx=4, pady=5)
 
-        btnpin = Button(mcerraduras, text ="CAMBIAR PIN", command=lambda:cambiarPin(), height=1, width=12)
+        btnpin = Button(mcerraduras, text ="CAMBIAR PIN", command=lambda:vpin(mcerraduras), height=1, width=12)
         btnpin.grid(column=3, row=1, padx=4, pady=5)
 
         btnsalir = Button(mcerraduras, text ="SALIR", command=lambda:cambiarPin(), height=1, width=12)
@@ -198,10 +198,14 @@ def vregistro(root):
     mregistro.rowconfigure(0, weight=1)"""
     mregistro.resizable(0,0)
     
+    mregistro.columnconfigure(0, weight=1)
+    mregistro.rowconfigure(0, weight=1)
+    mregistro.resizable(0,0)
+    
     mregistro.columnconfigure(4, weight=2)
     mregistro.rowconfigure(5, weight=1)
 
-    lbtitle = Label(mregistro, text="REGISTRAR CERRADURAS")
+    lbtitle = Label(mregistro, text="REGISTRAR CERRADURAS", font=('bold'))
     lbtitle.grid(column=2, row=0, padx=4, pady=5, sticky='w')
     
     
@@ -216,27 +220,30 @@ def vregistro(root):
     lblestado.grid(column=1, row=2, pady=5, padx=4, sticky='w')
   
 
-
+    #acomodo
     var = StringVar()
     R1 = Radiobutton(mregistro, text="Abierto", variable=var, value="Abierto")
     R1.grid(column=2, row=2, sticky='w')
 
     R2 = Radiobutton(mregistro, text="Cerrado", variable=var, value="Cerrado")
-    R2.grid(column=3, row=2, sticky='w')
+    R2.grid(column=2, row=3, sticky='w')
     var.set(None)
 
 
     lbpin = Label(mregistro, text="PIN")
-    lbpin.grid(column=1, row=3, padx=4, pady=5, sticky='w')
+    lbpin.grid(column=1, row=4, padx=4, pady=5, sticky='w')
     
     txtpin = Entry(mregistro, show="*")
-    txtpin.grid(column=2, row=3, padx=4, pady=5, sticky='w')
+    txtpin.grid(column=2, row=4, padx=4, pady=5, sticky='w')
+    
+    lbinst = Label(mregistro, text="*numérico de 4 a 6 dígitos", font=('Arial',8))
+    lbinst.grid(column=2, row=5, pady=5, sticky='nw')
 
     btnacc = Button(mregistro, text ="VERIFICAR", command=lambda: verificar(txtname.get(), var.get(), txtpin.get(), mregistro), height=1, width=12)
-    btnacc.grid(column=1, row=4, padx=4, pady=5)
+    btnacc.grid(column=1, row=5, padx=4, pady=5)
 
     btnext = Button(mregistro, text ="SALIR", height=1, width=12, command=lambda: exit())
-    btnext.grid(column=2, row=4, padx=4, pady=5)
+    btnext.grid(column=2, row=5, padx=4, pady=5)
 
 
     mregistro.mainloop()
@@ -246,6 +253,9 @@ def registrar(datos, root):
     os.system('clear' if os.name == 'posix' else 'cls')
     while True:
         os.system('clear' if os.name == 'posix' else 'cls')
+        if datos[0] == '' or datos[1] == 'None' or datos[2] == '':
+            messagebox.showwarning(message="INFORMACIÓN INCOMPLETA", title="ERROR")
+            vregistro(root)
 
         repetido = False
         if len(registro) > 0: #si hay datos registrados, se pueden crear nuevos, si no, que se cree el primero
@@ -264,8 +274,12 @@ def registrar(datos, root):
 
 
         #VALIDACIÓN DE ESTADO
-        if datos[1] == "Abierto": registro.append("1")
-        else: registro.append("0")
+        if datos[1] == 'None':
+            messagebox.showwarning(message="ESTADO INCOMPLETO", title="ERROR")
+            vregistro(root)
+        else:
+            if datos[1] == "Abierto": registro.append("1")
+            else: registro.append("0")
 
         #VALIDACIÓN DE PIN
         
@@ -274,7 +288,7 @@ def registrar(datos, root):
                 registro.append(datos[2].strip().strip())
                 break
             if not datos[2].isnumeric():
-                messagebox.showwarning(message="PIN DEBE SER NÚMERICO", title="ERROR")
+                messagebox.showwarning(message="PIN DEBE SER NUMÉRICO", title="ERROR")
                 for i in range(2): del registro[len(registro)-1]
                 vregistro(root)
             if len(datos[2].strip())<4 or len(datos[2].strip())> 6:
@@ -304,8 +318,63 @@ def registrar(datos, root):
         root.destroy()
         ventmenu(2)
 
+def vpin(root):
+    root.destroy()
+    mpin = Tk()
+    mpin.geometry("450x300")
+    mpin.title("MODIFICAR PIN")
 
-def cambiarPin():
+    """mpin.columnconfigure(0, weight=2)
+    mpin.rowconfigure(0, weight=1)"""
+    mpin.resizable(0,0)
+    
+    mpin.columnconfigure(0, weight=1)
+    mpin.rowconfigure(0, weight=1)
+    mpin.resizable(0,0)
+    
+    mpin.columnconfigure(4, weight=2)
+    mpin.rowconfigure(5, weight=1)
+
+    lbtitle = Label(mpin, text="MODIFICAR PIN", font=('bold'))
+    lbtitle.grid(column=2, row=0, padx=4, pady=5, sticky='w')
+    
+    
+    lbname = Label(mpin, text="Cerraduras Disponibles")
+    lbname.grid(column=1, row=1, padx=4, pady=5, sticky='w')
+    
+    options = []
+    for i in range(0,len(registro),3):
+        options.append(registro[i])
+  
+    # datatype of menu text
+    clicked = StringVar()
+    clicked.set('')
+    drop = OptionMenu(mpin, clicked, *options )
+    drop.configure(width=13)
+    drop.grid(column=2,row=1, padx=4, pady=5, sticky='w')
+
+
+    lbpin1 = Label(mpin, text="PIN Actual")
+    lbpin1.grid(column=1, row=3, padx=4, pady=5, sticky='w')
+    
+    txtpinact = Entry(mpin, show="*")
+    txtpinact.grid(column=2, row=3, padx=4, pady=5, sticky='w')
+    
+    lbpin2 = Label(mpin, text="Nuevo PIN")
+    lbpin2.grid(column=1, row=4, padx=4, pady=5, sticky='w')
+    
+    txtnewpin = Entry(mpin, show="*")
+    txtnewpin.grid(column=2, row=4, padx=4, pady=5, sticky='w')
+
+    btnacc = Button(mpin, text ="VERIFICAR", command=lambda: cambiarPin(clicked.get(), txtpinact.get(), txtnewpin.get(), mpin), height=1, width=12)
+    btnacc.grid(column=1, row=5, padx=4, pady=5)
+
+    btnext = Button(mpin, text ="SALIR", height=1, width=12, command=lambda: exit())
+    btnext.grid(column=2, row=5, padx=4, pady=5)
+
+
+    mpin.mainloop()
+def cambiarPin(cerradura, oldpin, newpin):
     os.system('clear' if os.name == 'posix' else 'cls')
     
     while True:
