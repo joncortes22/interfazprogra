@@ -54,3 +54,4 @@ def vregistro():
 
     mregistro.mainloop()
 
+vregistro()

@@ -1,10 +1,6 @@
 import os, sys, getpass
 from tkinter import *
-
-def main():
-    pass
-if __name__ == "__prueba__":
-    main()
+from tkinter import messagebox
 
 def ventmenu(tipo, registro):
 
@@ -19,65 +15,37 @@ def ventmenu(tipo, registro):
     mcerraduras.columnconfigure(4, weight=2)
     mcerraduras.rowconfigure(5, weight=1)
 
-    lbtitle = Label(mcerraduras, text="MENÚ PRINCIPAL")
+    lbtitle = Label(mcerraduras, text="MENÚ PRINCIPAL", font='bold')
     lbtitle.grid(column=2, row=0, padx=4, pady=5)
 
     if tipo == 1:
-        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:registrar(registro), height=1, width=12)
+        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:vregistro(mcerraduras, registro), height=1, width=12)
         btnregis.grid(column=1, row=2, padx=4, pady=5)
 
-        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda: main(), height=1, width=12)
+        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda: exit(), height=1, width=12)
         btnsalir.grid(column=3, row=2, padx=4, pady=5)
     else:
         btnacc = Button(mcerraduras, text ="ABRIR/CERRAR", command=lambda:accionar(registro), height=1, width=12)
         btnacc.grid(column=1, row=1, padx=4, pady=5)
 
-        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:registrar(mcerraduras, registro), height=1, width=12)
+        btnregis = Button(mcerraduras, text ="REGISTRAR", command=lambda:vregistro(mcerraduras, registro), height=1, width=12)
         btnregis.grid(column=1, row=2, padx=4, pady=5)
 
         btnpin = Button(mcerraduras, text ="CAMBIAR PIN", command=lambda:cambiarPin(registro), height=1, width=12)
         btnpin.grid(column=3, row=1, padx=4, pady=5)
 
-        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda:prueba(), height=1, width=12)
+        btnsalir = Button(mcerraduras, text ="SALIR", command=lambda:cambiarPin(registro), height=1, width=12)
         btnsalir.grid(column=3, row=2, padx=4, pady=5)
 
     mcerraduras.mainloop()
 
-def menu(registro):
-    ventmenu()
-    while True:
-        try:
-            os.system('clear' if os.name == 'posix' else 'cls')
-            print("""
----MENÚ CERRADURAS---\n
-|1-Abrir/Cerrar        |
-|2-Registrar           |
-|3-Cambiar PIN         |
-|4-Salir               |
-            """)
-            if len(registro) == 0:
-                opcion= int(input("No hay cerraduras registradas, ingrese para seguir | Opción: "))
-                match opcion:
-                    case 2: registrar(registro)
-                    case 4: return
-                    case _: opcion = 1
-            else:
-                opcion = int(input("Opción: "))
-                match opcion:
-                    case 1: accionar(registro)
-                    case 2: registrar(registro)
-                    case 3: cambiarPin(registro)
-                    case 4: return
-                    case _: opcion = 1
-        except ValueError:
-            opcion = 1
 
 def leer():
     #Esta función lee los contenidos del documento "cerraduras.txt", que es donde se almacena la información
     registro = [] #se define la lista "registro", que manejará toda la información que necesitemos
     if (os.path.exists("cerraduras.txt") == False): #en caso de que el documento no esté creado, la función open con el comando w, crea el documento
         fp = open("cerraduras.txt", "w")
-        menu(1, registro)
+        ventmenu(1, registro)
     else:
         with open("cerraduras.txt", "r") as fp: #a raíz de que el documento guarda los identificadores "nombre" y "PIN", hay que guardar los valores de por medio
             numLinea = [1] #este array empezará a guardar valores en 2, lo que obtendrá los valores de las cerraduras (recordando que las lineas de txt también se leen desde 0)
@@ -146,7 +114,7 @@ def accionar(registro):
             #ELECCIÓN DE CERRADURA
             while True:
                 select = input("Ingrese el # de la cerradura a modificar o 'S' para salir: ")
-                if select.lower().strip() == 's': menu(registro)
+                if select.lower().strip() == 's': ventmenu(2, registro)
                 if int(select.strip()) > len(nombres): accionar(registro)
                 else:
                     find = False
@@ -216,8 +184,12 @@ def accionar(registro):
         except ValueError:
             accionar(registro)
 
+def verificar(nombre, estado,pin, registro, root):
+    datos = [nombre,estado,pin]
+    registrar(datos, registro, root)
 
-def vregistro():
+def vregistro(root, registro):
+    root.destroy()
     mregistro = Tk()
     mregistro.geometry("450x300")
     mregistro.title("REGISTRAR")
@@ -242,82 +214,74 @@ def vregistro():
 
     lblestado = Label(mregistro, text="Estado")
     lblestado.grid(column=1, row=2, pady=5, padx=4, sticky='w')
-    estado = StringVar() 
-    cb_strings = ['Abierto', 'Cerrado']
-    estado.set(cb_strings[0])
+  
 
-    columnf = 2
-    for item in cb_strings:
-        button = Radiobutton(mregistro, text=item, variable=estado, value=item)
-        button.grid(column=columnf, row=2, sticky='w')
-        columnf += 1
+
+    var = StringVar()
+    R1 = Radiobutton(mregistro, text="Abierto", variable=var, value="Abierto")
+    R1.grid(column=2, row=2, sticky='w')
+
+    R2 = Radiobutton(mregistro, text="Cerrado", variable=var, value="Cerrado")
+    R2.grid(column=3, row=2, sticky='w')
+
 
 
     lbpin = Label(mregistro, text="PIN")
     lbpin.grid(column=1, row=3, padx=4, pady=5, sticky='w')
     
-    lbpin = Entry(mregistro, show="*")
-    lbpin.grid(column=2, row=3, padx=4, pady=5, sticky='w')
+    txtpin = Entry(mregistro, show="*")
+    txtpin.grid(column=2, row=3, padx=4, pady=5, sticky='w')
 
-    btnacc = Button(mregistro, text ="VERIFICAR", height=1, width=12)
+    btnacc = Button(mregistro, text ="VERIFICAR", command=lambda: verificar(txtname.get(), var.get(), txtpin.get(), registro, mregistro), height=1, width=12)
     btnacc.grid(column=1, row=4, padx=4, pady=5)
 
-    btnext = Button(mregistro, text ="SALIR", height=1, width=12, command=lambda: main())
+    btnext = Button(mregistro, text ="SALIR", height=1, width=12, command=lambda: exit())
     btnext.grid(column=2, row=4, padx=4, pady=5)
 
 
     mregistro.mainloop()
 
-def registrar(root,registro):
-    root.destroy()
-    vregistro()
+def registrar(datos,registro, root):
+    
     os.system('clear' if os.name == 'posix' else 'cls')
     while True:
         os.system('clear' if os.name == 'posix' else 'cls')
-        print("--REGISTRO DE CERRADURA--\n")
 
         repetido = False
         if len(registro) > 0: #si hay datos registrados, se pueden crear nuevos, si no, que se cree el primero
-            nombre = input("Nombre: ")
             for i in range(len(registro)):
-                if nombre.lower().strip() == registro[i].lower().strip(): 
+                if datos[0].lower().strip() == registro[i].lower().strip(): 
                     repetido = True
                     break
                 i+=3
                 if i>len(registro):break
             if repetido:
-                intento = 0
-                print("Este nombre ya existe")
-                while True: #Después de haber guardado la cerradura, se pregunta cuál es la siguiente acción
-                    intento = int(input("¿Desea volver a intentar? 1-Si 2-No | Resp: "))
-                    if intento == 1: registrar(registro) #Si la respuesta es sí, vuelve a comenzar el proceso de registro
-                    elif intento == 2: return #Si es no, se abre el menú
-                    else: print("Opción no valida\n") #Cualquier otra opción dará error
-            else: registro.append(nombre.strip())
+                messagebox.showwarning(message="NOMBRE EN USO", title="ERROR")
+                vregistro(root, registro)
+            else: registro.append(datos[0].strip())
         else:
-            nombre = input("Nombre: ")
-            registro.append(nombre.strip())
+            registro.append(datos[0].strip())
 
 
         #VALIDACIÓN DE ESTADO
-        estado = "inactive"
-        while estado != "1" or estado != "0": #el estado tiene que ser tiene que ser 1 o 2, de lo contrario no podrá continuar
-            estado = input("Estado 1-Abierto 0-Cerrado: ")
-            if estado == "1" or estado == "0": 
-                registro.append(estado)
-                break
-            else:
-                print("Opción no valida")
+        if datos[1] == "Abierto": registro.append("1")
+        else: registro.append("0")
 
         #VALIDACIÓN DE PIN
         
         while True: #el estado tiene que ser tiene que ser 1 o 2, de lo contrario no podrá continuar
-            pin = getpass.getpass("PIN numeral(entre 4 y 6 números): ")
-            if len(pin.strip())>=4 and len(pin.strip())<= 6: 
-                registro.append(pin.strip())
+            if len(datos[2].strip())>=4 and len(datos[2].strip())<= 6 and datos[2].isnumeric(): 
+                registro.append(datos[2].strip().strip())
                 break
-            else:
-                print("Opción no valida\n")
+            if not datos[2].isnumeric():
+                messagebox.showwarning(message="PIN DEBE SER NÚMERICO", title="ERROR")
+                for i in range(2): del registro[len(registro)-1]
+                vregistro(root, registro)
+            if len(datos[2].strip())<4 or len(datos[2].strip())> 6:
+                messagebox.showwarning(message="CANTIDAD DE CARACTERES INVÁLIDOS", title="ERROR")
+                for i in range(2): del registro[len(registro)-1]
+                vregistro(root, registro)
+            
 
         titulo = 0 #variable que decidirá qué tipo de dato se escribirá en el .txt
         #ESCRITURA EN TXT FILE
@@ -336,11 +300,9 @@ def registrar(root,registro):
                     f.write(registro[len(registro)-1]) #El último dato de la lista siempre será un PIN de cerradura, por lo que se utiliza ese valor para escribirlo en el .txt
                     titulo = 0 #Se devuelve la variable a 0 para que la próxima escritura sea de un Nombre de Cerradura
                 f.write("\n")
-        while True: #Después de haber guardado la cerradura, se pregunta cuál es la siguiente acción
-            resp = int(input("\n¿Desea guardar otra cerradura? 1-Si 2-No | Resp: "))
-            if resp == 1: break #Si la respuesta es sí, vuelve a comenzar el proceso de registro
-            elif resp == 2: return #Si es no, se abre el menú
-            else: print("Opción no valida") #Cualquier otra opción dará error
+            messagebox.showinfo(message="INGRESADO CORRECTAMENTE", title="REGISTRO")
+        root.destroy()
+        ventmenu(2,registro)
 
 
 def cambiarPin(registro):
@@ -432,3 +394,4 @@ def cambiarPin(registro):
             elif resp == 2: return #Si es no, se abre el menú
             else: print("Opción no válida\n") #Cualquier otra opción dará error
 
+leer()
