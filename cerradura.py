@@ -42,6 +42,7 @@ def mactivo(root):
     root.destroy()
     ventmenu(2)
 
+
 def leer():
     #Esta función lee los contenidos del documento "cerraduras.txt", que es donde se almacena la información
     if (os.path.exists("cerraduras.txt") == False): #en caso de que el documento no esté creado, la función open con el comando w, crea el documento
@@ -73,6 +74,7 @@ def escribir():
                 f.write(registro[i]) 
                 titulo = 0 #Se devuelve la variable a 0 para que la próxima escritura sea de un Nombre de Cerradura
             f.write("\n")
+
 
 def vaccionar(root):
     def selection_changed(event):
