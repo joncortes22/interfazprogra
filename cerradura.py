@@ -3,9 +3,7 @@ from tkinter import *
 from tkinter import messagebox, ttk
 
 registro = []
-combostate = ''
 def ventmenu(tipo):
-
     mcerraduras = Tk()
     mcerraduras.geometry("450x300")
     mcerraduras.title("MENÚ CERRADURAS")
@@ -125,7 +123,7 @@ def vaccionar(root):
     lblestado = Label(maccionar, text="Estado")
     lblestado.grid(column=1, row=3, padx=4, pady=5, sticky='w')
     
-    estado = Label(maccionar, text=combostate)
+    estado = Label(maccionar, text='')
     estado.grid(column=2, row=3, padx=4, pady=5, sticky='w')
     
     lbpin2 = Label(maccionar, text="PIN")
